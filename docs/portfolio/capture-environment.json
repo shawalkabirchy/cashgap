@@ -1,0 +1,48 @@
+{
+  "capturedAt": "2026-10-25T20:14:09.295Z",
+  "fixtureDate": "2026-10-25",
+  "timezone": "Asia/Dhaka",
+  "browser": "156.0.8078.4",
+  "systemBrowsers": [
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.47",
+      "result": "Passed with keyboard only: preview, cancel, static navigation and invoice save"
+    },
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.42",
+      "result": "Passed with keyboard only: preview, cancel, static navigation and invoice save"
+    }
+  ],
+  "managedBrowsers": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4"
+    },
+    {
+      "engine": "firefox",
+      "version": "157.0"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2"
+    }
+  ],
+  "node": "v24.14.0",
+  "platform": "win32",
+  "os": "10.0.26200",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "logicalCores": 12,
+  "memoryGiB": 15.6,
+  "desktop": {
+    "width": 1440,
+    "height": 1080
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844
+  },
+  "minimumWidthChecked": 360,
+  "consoleErrors": []
+}

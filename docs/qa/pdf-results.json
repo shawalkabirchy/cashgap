@@ -1,0 +1,18 @@
+{
+  "report-a4.pdf": {
+    "pages": 4,
+    "dated_rows": 90,
+    "page_points": [
+      595.92,
+      842.88
+    ]
+  },
+  "report-letter.pdf": {
+    "pages": 4,
+    "dated_rows": 90,
+    "page_points": [
+      612.0,
+      792.0
+    ]
+  }
+}

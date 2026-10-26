@@ -1,0 +1,35 @@
+
+> cashgap@1.0.0 prebuild
+> node scripts/collect-licenses.mjs
+
+Retained third-party notices for 748 installed packages and the original Geist OFL.
+
+> cashgap@1.0.0 build
+> next build --webpack
+
+▲ Next.js 16.4.3 (webpack)
+✓ Running next.config.ts took 262ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.9s
+  Running TypeScript ...
+  Finished TypeScript in 2.9s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/6) ...
+  Generating static pages using 7 workers (1/6) 
+  Generating static pages using 7 workers (2/6) 
+  Generating static pages using 7 workers (4/6) 
+✓ Generating static pages using 7 workers (6/6) in 1970ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /expenses
+├ ○ /invoices
+└ ○ /settings
+
+
+○  (Static)  prerendered as static content
+

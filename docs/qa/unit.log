@@ -1,0 +1,19 @@
+
+> cashgap@1.0.0 test
+> vitest run --reporter=default --reporter=json --outputFile=docs/qa/unit-results.json
+
+
+ RUN  v5.0.5 D:/Console Log Studio/Projects/CashGap
+
+stdout | src/lib/domain.test.ts > CashGap forecast acceptance > processes the maximum supported records without losing integer precision
+Maximum dataset (500 invoices, 500 expenses, 50 monthly rules, 365 days): 6.87 ms
+
+ ✓ src/lib/domain.test.ts (19 tests) 52ms
+ ✓ src/lib/transfers.test.ts (7 tests) 92ms
+
+ Test Files  2 passed (2)
+      Tests  26 passed (26)
+   Start at  02:19:23
+   Duration  1.81s (import 58%, transform 21%, tests 12%, worker 9%)
+
+JSON report written to D:/Console Log Studio/Projects/CashGap/docs/qa/unit-results.json
