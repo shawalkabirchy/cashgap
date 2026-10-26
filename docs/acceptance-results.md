@@ -1,6 +1,6 @@
 # CashGap acceptance results
 
-Recorded October 26, 2026 (Asia/Dhaka). This is the locally runnable static release. Public Cloudflare deployment has not been performed.
+Recorded October 26, 2026 (Asia/Dhaka). The static release is locally runnable and deployed at [cashgap.pages.dev](https://cashgap.pages.dev), with source in [GitHub](https://github.com/shawalkabirchy/cashgap).
 
 ## Recorded runs
 
@@ -12,6 +12,7 @@ Recorded October 26, 2026 (Asia/Dhaka). This is the locally runnable static rele
 | `npm run build` | Passed; four routes exported to `out` | [Production build log](qa/build.log) |
 | `npm run test:e2e` | 54 passed; 0 failed, skipped, or flaky; 115.01 seconds | [Playwright JSON](qa/e2e-results.json), [test source](../tests/app.spec.ts) |
 | `npm run capture:portfolio` | Passed; synthetic screenshots, print PDFs, and installed-browser keyboard checks | [Capture environment](portfolio/capture-environment.json), [capture script](../scripts/capture-portfolio.mjs) |
+| `node scripts/verify-deployment.mjs` | Passed on the public Cloudflare origin in isolated Chromium | [Public smoke results](qa/deployed-smoke-results.json), [script](../scripts/verify-deployment.mjs), [release metadata](qa/cloudflare-release.json) |
 
 The browser suite ran against the production export served at `http://localhost:4173`, with two workers, isolated test workspaces, and no retries. It contains 18 cases per engine. The final rebuild uses the same application source as that tested export; subsequent edits were tests and documentation. Evidence copies under `docs/qa` survive replacement of the temporary `test-results` directory.
 
@@ -60,14 +61,18 @@ Both print PDFs contain four pages and all 90 daily rows. A4 first page and Lett
 
 The dependency audit during setup reported zero known vulnerabilities after applying the pinned preview-server compression fix. Application and dependency versions are recorded in `package-lock.json`; third-party license notices are retained in the export.
 
+## Public deployment verification
+
+The initial Cloudflare Git build for application commit `e8e94df55de3f213cc66ba44ea0ebf6f823985e9` succeeded on October 26, 2026. Public verification checked all four direct routes and provider headers, saved scenario application across reload, JSON download/restoration, CSV privacy, daily/print output, and phone layout. [Public results](qa/deployed-smoke-results.json) retain the actual responses and [screenshots](qa/deployed-desktop.png). The mobile check waits for the chart's resize observer to settle; an immediate resize assertion was premature. The full 54-case, three-engine suite above ran locally against the same application source; the public smoke run used Chromium.
+
 ## Not run and release limits
 
 | Environment or check | Result | Reason / next step |
 | --- | --- | --- |
-| Public Cloudflare Pages deployment, provider headers, direct public routes and downloads | **Not run** | Requires the owner's account access and publication authorization. Follow [deployment.md](deployment.md), then verify the real origin. |
+| Custom-domain behavior | **Not run** | The deployed and verified origin is the free `cashgap.pages.dev` subdomain. No custom domain was requested. |
 | Actual Safari, iOS devices, Android devices, and screen-reader session | **Not run** | No physical-device or screen-reader session was available. Managed WebKit and axe are the recorded substitutes, not proof of those environments. |
 | Physical A4/Letter printer output | **Not run** | Browser-generated PDFs and CSS print rendering were verified; paper output was not. |
 | Full interaction-to-paint latency at maximum records | **Not run** | The recorded performance figure measures only the pure forecast calculation. |
 | Browser eviction, hardware failure, and operating-system disk exhaustion | **Not run** | Failure injection verifies application responses; it does not simulate every environmental failure. Export JSON for retention. |
 
-The app is ready for local portfolio review. Public-release verification remains an owner deployment step. Browser storage belongs to a device and origin, can be cleared, and has no cloud replica; JSON backup/restore is the recovery path.
+The app is deployed and verified for portfolio review. Browser storage belongs to a device and origin, can be cleared, and has no cloud replica; JSON backup/restore is the recovery path. Existing localhost workspaces do not automatically move to the public origin.

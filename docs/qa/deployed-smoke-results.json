@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-26T14:17:47.353Z",
+  "url": "https://cashgap.pages.dev",
+  "browser": "156.0.8078.4",
+  "method": "Isolated Playwright Chromium; Browser plugin not available",
+  "timezone": "Asia/Dhaka",
+  "fixtureDate": "2026-10-25",
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "no-referrer",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()"
+      }
+    },
+    {
+      "route": "/invoices/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "no-referrer",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()"
+      }
+    },
+    {
+      "route": "/expenses/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "no-referrer",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()"
+      }
+    },
+    {
+      "route": "/settings/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "referrer-policy": "no-referrer",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()"
+      }
+    }
+  ],
+  "checks": [
+    "direct routes and refresh",
+    "provider security headers",
+    "synthetic initialization",
+    "1440px and 360px layout",
+    "backup download",
+    "preview/cancel without writes",
+    "single scenario apply and reload",
+    "local CSV import",
+    "exact backup restoration",
+    "90 daily/print rows",
+    "A4 PDF generation",
+    "no file contents or filenames in requests",
+    "no off-origin requests",
+    "no console or HTTP errors"
+  ],
+  "backupFilename": "cashgap-backup.json",
+  "backupBytes": 3893,
+  "pdfBytes": 96421,
+  "requestCount": 102,
+  "consoleErrors": [],
+  "result": "Passed"
+}

@@ -4,6 +4,8 @@ A private cash-flow planner for small agencies. See how expected client receipts
 
 **Self-initiated ConsoleLog Studio portfolio project. All sample companies and transactions are fictional.**
 
+**[Live demo](https://cashgap.pages.dev)** · **[GitHub source](https://github.com/shawalkabirchy/cashgap)**
+
 ![CashGap desktop dashboard](docs/portfolio/desktop.png)
 
 ## Run locally
@@ -30,10 +32,10 @@ Open `http://localhost:4173`. The `out/` directory is the complete deployable st
 
 ```sh
 npm run lint
+npm run build
 npm run typecheck
 npm test
 npx playwright install chromium firefox webkit
-npm run build
 npm run test:e2e
 ```
 
@@ -122,7 +124,7 @@ Third-party notices are retained in [public/third-party-licenses.txt](public/thi
 
 Use **Settings & data → Reset to sample agency** to replace the workspace with today's fictional agency, or **Start a new personal plan** to create an empty USD/BDT plan. Both require explicit replacement confirmation and offer an export first. Clearing browser data is unnecessary.
 
-See [Cloudflare deployment instructions](docs/deployment.md). Mandatory runtime spending is zero: static assets only, no Functions, database, paid API, or newly purchased domain. Cloudflare account access and publication authorization are required for an actual public deployment. This repository does not contain credentials.
+Production is deployed at [cashgap.pages.dev](https://cashgap.pages.dev). Cloudflare Pages builds `main` from this repository with `npm run build` and publishes `out` automatically. See [deployment and verification instructions](docs/deployment.md). Mandatory runtime spending is zero: static assets only, no Functions, database, paid API, or newly purchased domain. This repository does not contain deployment credentials.
 
 ## Portfolio material
 

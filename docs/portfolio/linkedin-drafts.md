@@ -61,7 +61,9 @@ The walkthrough shows the complete flow. If your team has a similar planning wor
 
 [ConsoleLog Studio](https://consolelog.studio/)
 
-Suggested visual: `scenario.png` or the walkthrough recording. Add a public demo link only after deployment and verification.
+[Try the CashGap demo](https://cashgap.pages.dev) · [View the source](https://github.com/shawalkabirchy/cashgap)
+
+Suggested visual: `scenario.png` or the walkthrough recording. The public demo has been deployed and its main workflow verified; this post remains an unpublished draft.
 
 ## Additional angles and publication notes
 

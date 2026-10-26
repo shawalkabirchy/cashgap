@@ -71,4 +71,4 @@ CashGap models daily closing balances from user-entered assumptions. It does not
 
 Agency contact: [ConsoleLog Studio](https://consolelog.studio/).
 
-The application is locally runnable. Add the verified public demo URL after the owner's deployment, and add a repository link only if the owner chooses to publish the source. Do not describe this as commissioned client work or imply that the public demo is already deployed.
+Explore the [live demo](https://cashgap.pages.dev) and [source repository](https://github.com/shawalkabirchy/cashgap). The application is also locally runnable. This is a self-initiated studio project, not commissioned client work. Public deployment and workflow verification are recorded in the [acceptance evidence](../acceptance-results.md).
