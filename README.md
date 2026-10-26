@@ -124,7 +124,7 @@ Third-party notices are retained in [public/third-party-licenses.txt](public/thi
 
 Use **Settings & data → Reset to sample agency** to replace the workspace with today's fictional agency, or **Start a new personal plan** to create an empty USD/BDT plan. Both require explicit replacement confirmation and offer an export first. Clearing browser data is unnecessary.
 
-Production is deployed at [cashgap.pages.dev](https://cashgap.pages.dev). Cloudflare Pages builds `main` from this repository with `npm run build` and publishes `out` automatically. See [deployment and verification instructions](docs/deployment.md). Mandatory runtime spending is zero: static assets only, no Functions, database, paid API, or newly purchased domain. This repository does not contain deployment credentials.
+Production is deployed at [cashgap.pages.dev](https://cashgap.pages.dev). Cloudflare Pages builds `main` from this repository with `npm run build` and publishes `out` when a deployment is triggered. This release used a manual Git-backed build. Future push-triggered builds require adding CashGap to the existing Cloudflare GitHub app's selected repositories. See [deployment and verification instructions](docs/deployment.md). Mandatory runtime spending is zero: static assets only, no Functions, database, paid API, or newly purchased domain. This repository does not contain deployment credentials.
 
 ## Portfolio material
 

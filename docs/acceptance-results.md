@@ -69,6 +69,7 @@ The initial Cloudflare Git build for application commit `e8e94df55de3f213cc66ba4
 
 | Environment or check | Result | Reason / next step |
 | --- | --- | --- |
+| Automatic deployment after a Git push | **Not active** | A follow-up push did not trigger a build. CashGap is absent from the existing Cloudflare GitHub app's selected repositories. Manual Git-backed deployment succeeds; the owner must review and grant repository access to enable push builds. See [deployment setup](deployment.md). |
 | Custom-domain behavior | **Not run** | The deployed and verified origin is the free `cashgap.pages.dev` subdomain. No custom domain was requested. |
 | Actual Safari, iOS devices, Android devices, and screen-reader session | **Not run** | No physical-device or screen-reader session was available. Managed WebKit and axe are the recorded substitutes, not proof of those environments. |
 | Physical A4/Letter printer output | **Not run** | Browser-generated PDFs and CSS print rendering were verified; paper output was not. |

@@ -21,7 +21,11 @@ The deployable directory is **out**. Keep `public/_headers` in the source; Next 
 
 ## Production configuration
 
-The existing project uses Git integration. Push a reviewed commit to `main` to trigger a production build; other branches receive preview deployments. No repository deployment secrets or local Wrangler login are needed for this integration. The build runs in Cloudflare's Linux build image version 3.
+The existing project has a GitHub source and builds successfully from `main`. The release was triggered through the authenticated Cloudflare Pages API, not by a push webhook. The build runs in Cloudflare's Linux build image version 3. No repository deployment secrets or local Wrangler login were needed.
+
+**Automatic push builds need an owner setup step.** The existing Cloudflare Workers and Pages GitHub app is restricted to selected repositories, and CashGap is not selected. A follow-up push did not create a deployment. Its settings advertise write access to repository administration, code, checks, deployments, and pull requests; that access was not expanded during deployment. To enable automatic production and preview builds, review [the existing installation](https://github.com/settings/installations/167602600), add only `shawalkabirchy/cashgap` while retaining the existing selections, and save. Then verify a new push creates a deployment. The Pages-side production and preview controls are already enabled.
+
+Until that access is granted, a manual Git-backed deployment works: send an authenticated `POST /accounts/{account_id}/pages/projects/cashgap/deployments` request with `multipart/form-data` containing `branch=main`. Cloudflare fetches and builds that branch. This is the method used for this release; creating a deployment for a new commit is separate from pushing it to GitHub.
 
 The configured build settings are:
 
