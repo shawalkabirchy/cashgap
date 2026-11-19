@@ -40,9 +40,10 @@ export function SettingsPage() {
     <>
       <header className="page-header">
         <div>
-          <h1>Your plan. Your data.</h1>
+          <h1>Plan settings and data</h1>
           <p>
-            Set your starting point, bring in records, and keep a backup close.
+            Set the opening balance, reserve and start date. Import records and
+            keep a backup file.
           </p>
         </div>
       </header>
@@ -53,7 +54,7 @@ export function SettingsPage() {
               <h2>Plan settings</h2>
             </CardTitle>
             <CardDescription>
-              A forecast is only as useful as the assumptions behind it.
+              The forecast starts from these values.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -64,15 +65,17 @@ export function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                <h2>Import & backup</h2>
+                <h2>Import and backup</h2>
               </CardTitle>
               <CardDescription>
-                Local files in. Local files out. Your data stays yours.
+                Files are read and written on this device only.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-5">
               <div className="data-action">
-                <Download aria-hidden="true" />
+                <span className="data-action-icon">
+                  <Download aria-hidden="true" />
+                </span>
                 <div className="flex-1">
                   <h3>Export JSON backup</h3>
                   <p>
@@ -85,12 +88,14 @@ export function SettingsPage() {
                   disabled={saving}
                   onClick={() => backup("saved")}
                 >
-                  Export
+                  Export backup
                 </Button>
               </div>
               <Separator />
               <div className="data-action">
-                <FileInput aria-hidden="true" />
+                <span className="data-action-icon">
+                  <FileInput aria-hidden="true" />
+                </span>
                 <div className="flex-1">
                   <h3>Import CSV</h3>
                   <p>
@@ -108,7 +113,9 @@ export function SettingsPage() {
               </div>
               <Separator />
               <div className="data-action">
-                <FolderSync aria-hidden="true" />
+                <span className="data-action-icon">
+                  <FolderSync aria-hidden="true" />
+                </span>
                 <div className="flex-1">
                   <h3>Restore JSON backup</h3>
                   <p>
@@ -138,14 +145,14 @@ export function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                <h2>A fresh starting point</h2>
+                <h2>Start over</h2>
               </CardTitle>
               <CardDescription>
-                Every replacement asks first. Export a backup before starting
-                over.
+                Both options ask before replacing anything. Export a backup
+                first.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className="start-over-actions">
               <Button
                 variant="outline"
                 disabled={saving}
@@ -164,7 +171,7 @@ export function SettingsPage() {
               </Button>
             </CardContent>
           </Card>
-          <div className="flex items-start gap-3 px-1 text-xs leading-relaxed text-muted-foreground">
+          <div className="page-note flex items-start gap-3 px-1">
             <LockKeyhole
               className="mt-0.5 size-4 shrink-0"
               aria-hidden="true"

@@ -20,6 +20,7 @@ import { useWorkspace } from "./workspace-provider";
 import { InvoiceEditor } from "./record-forms";
 import { ScenarioPanel, type ScenarioPreview } from "./scenario-panel";
 import { DailyTable, DayDetails, PrintReport } from "./day-details";
+import { SegmentedControl } from "./segmented-control";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -38,7 +39,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Empty,
@@ -80,14 +80,35 @@ export function Dashboard() {
     day.events.map((event) => ({ ...event, date: day.date })),
   );
   const day = result.days.find((day) => day.date === selectedDay);
+  const headroom = result.lowestMinor - settings.reserveMinor;
+  const plan = preview
+    ? {
+        lowest:
+          baseline.lowestMinor !== result.lowestMinor
+            ? money(baseline.lowestMinor)
+            : null,
+        breach:
+          baseline.firstBreachOn !== result.firstBreachOn
+            ? baseline.firstBreachOn
+              ? formatDate(baseline.firstBreachOn, true)
+              : "no breach"
+            : null,
+        closing:
+          baseline.closingMinor !== result.closingMinor
+            ? money(baseline.closingMinor)
+            : null,
+      }
+    : null;
   return (
     <>
       <div className="screen-only">
         <header className="page-header">
           <div>
-            <h1>Your cash, a clearer picture.</h1>
+            <h1>Cash-flow forecast</h1>
             <p>
-              See what’s coming in, what’s going out, and where the gaps are.
+              {settings.horizonDays} days from{" "}
+              {formatDate(settings.startOn, true)} · {settings.currency} ·
+              Reserve {money(settings.reserveMinor)}
             </p>
           </div>
           <div className="header-actions">
@@ -106,7 +127,7 @@ export function Dashboard() {
           </div>
         </header>
         {failure ? (
-          <Alert variant="destructive" className="mb-5">
+          <Alert variant="destructive" className="mb-6">
             <AlertTitle>Could not save</AlertTitle>
             <AlertDescription>{failure}</AlertDescription>
           </Alert>
@@ -126,16 +147,27 @@ export function Dashboard() {
           </div>
           <div className="metric">
             <dt>Lowest closing balance</dt>
-            <dd>
+            <dd data-tone={headroom < 0 ? "warning" : undefined}>
               <span data-testid="metric-lowest">
                 {money(result.lowestMinor)}
               </span>
-              <small>{formatDate(result.lowestOn, true)}</small>
+              <small data-tone={headroom < 0 ? "warning" : undefined}>
+                {formatDate(result.lowestOn, true)} ·{" "}
+                {headroom === 0
+                  ? "at reserve"
+                  : `${money(Math.abs(headroom))} ${headroom > 0 ? "above" : "below"} reserve`}
+              </small>
+              {plan?.lowest ? (
+                <small className="metric-plan">Saved plan: {plan.lowest}</small>
+              ) : null}
             </dd>
           </div>
           <div className="metric">
             <dt>First reserve breach</dt>
-            <dd className="metric-text">
+            <dd
+              className="metric-text"
+              data-tone={result.firstBreachOn ? "warning" : undefined}
+            >
               <span data-testid="metric-breach">
                 {result.firstBreachOn
                   ? formatDate(result.firstBreachOn, true)
@@ -144,8 +176,11 @@ export function Dashboard() {
               <small>
                 {result.dangerDays
                   ? `${result.dangerDays} day${result.dangerDays === 1 ? "" : "s"} below reserve`
-                  : "A little breathing room"}
+                  : "Every day at or above reserve"}
               </small>
+              {plan?.breach ? (
+                <small className="metric-plan">Saved plan: {plan.breach}</small>
+              ) : null}
             </dd>
           </div>
           <div className="metric">
@@ -155,14 +190,17 @@ export function Dashboard() {
                 {money(result.closingMinor)}
               </span>
               <small>{formatDate(end, true)}</small>
+              {plan?.closing ? (
+                <small className="metric-plan">Saved plan: {plan.closing}</small>
+              ) : null}
             </dd>
           </div>
         </dl>
         {result.overdue.length ? (
-          <Alert className="mb-5">
+          <Alert className="mb-6">
             <TriangleAlert aria-hidden="true" />
             <AlertTitle>
-              Overdue & unscheduled · {result.overdue.length}
+              Overdue and unscheduled invoices · {result.overdue.length}
             </AlertTitle>
             <AlertDescription>
               <p>
@@ -187,28 +225,27 @@ export function Dashboard() {
           </Alert>
         ) : null}
         <div className="dashboard-grid">
-          <Card>
+          <Card className="chart-card">
             <CardHeader>
               <div className="chart-header">
                 <div>
                   <CardTitle>
-                    <h2 className="chart-title">Cash flow forecast</h2>
+                    <h2>Daily closing balance</h2>
                   </CardTitle>
                   <p className="chart-subtitle">
                     {formatDate(settings.startOn, true)} –{" "}
                     {formatDate(end, true)} · {settings.currency}
                   </p>
                 </div>
-                <ToggleGroup
-                  type="single"
-                  variant="outline"
-                  spacing={0}
-                  size="sm"
-                  value={String(settings.horizonDays)}
+                <SegmentedControl
                   aria-label="Forecast horizon"
+                  value={String(settings.horizonDays)}
                   disabled={saving || !!preview}
+                  options={HORIZONS.map((days) => ({
+                    value: String(days),
+                    label: `${days} days`,
+                  }))}
                   onValueChange={async (value) => {
-                    if (!value) return;
                     try {
                       await commit({
                         ...stored.workspace,
@@ -228,38 +265,46 @@ export function Dashboard() {
                       );
                     }
                   }}
-                >
-                  {HORIZONS.map((days) => (
-                    <ToggleGroupItem
-                      key={days}
-                      value={String(days)}
-                      aria-label={`${days} days`}
-                    >
-                      {days} days
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
+                />
               </div>
             </CardHeader>
             <CardContent>
-              <ForecastChart
-                result={result}
-                baseline={preview ? baseline : undefined}
-                settings={settings}
-                onSelect={setSelectedDay}
-              />
+              <div className="chart-frame">
+                <ForecastChart
+                  result={result}
+                  baseline={preview ? baseline : undefined}
+                  settings={settings}
+                  onSelect={setSelectedDay}
+                />
+              </div>
               <div className="chart-key">
                 <span>
-                  <span className="legend-dot" />
+                  <span className="legend-line" aria-hidden="true" />
                   {preview ? "Scenario preview" : "Projected closing balance"}
                 </span>
                 {preview ? (
                   <span>
-                    <span className="legend-dot legend-baseline" />
-                    Current plan
+                    <span
+                      className="legend-line legend-baseline"
+                      aria-hidden="true"
+                    />
+                    Saved plan
                   </span>
                 ) : null}
-                <span>Daily totals · select a day to explore</span>
+                <span>
+                  <span
+                    className="legend-line legend-reserve"
+                    aria-hidden="true"
+                  />
+                  Reserve
+                </span>
+                <span>
+                  <span className="legend-zone" aria-hidden="true" />
+                  Below reserve
+                </span>
+                <span className="chart-hint">
+                  Select a day to see its movements
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -270,7 +315,7 @@ export function Dashboard() {
             onPreview={setPreview}
           />
         </div>
-        <Card>
+        <Card className="table-card">
           <CardHeader>
             <CardTitle>
               <h2>Upcoming cash movements</h2>
@@ -286,7 +331,7 @@ export function Dashboard() {
                   <TableRow>
                     <TableHead>Date</TableHead>
                     <TableHead>Description</TableHead>
-                    <TableHead>Type</TableHead>
+                    <TableHead className="col-wide">Type</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -300,7 +345,12 @@ export function Dashboard() {
                           onClick={() => setSelectedDay(event.date)}
                           aria-label={`Explain ${formatDate(event.date, true)}`}
                         >
-                          {formatDate(event.date, true)}
+                          <span className="date-full">
+                            {formatDate(event.date, true)}
+                          </span>
+                          <span className="date-short">
+                            {formatDate(event.date)}
+                          </span>
                         </Button>
                       </TableCell>
                       <TableCell className="table-description">
@@ -311,8 +361,11 @@ export function Dashboard() {
                             · {event.clientName}
                           </span>
                         ) : null}
+                        <span className="cell-meta col-compact">
+                          {event.kind === "invoice" ? "Invoice" : "Expense"}
+                        </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="col-wide">
                         <Badge
                           variant={
                             event.kind === "invoice" ? "secondary" : "outline"
@@ -334,10 +387,10 @@ export function Dashboard() {
             ) : (
               <Empty>
                 <EmptyHeader>
-                  <EmptyTitle>A clean slate</EmptyTitle>
+                  <EmptyTitle>No cash movements in this forecast</EmptyTitle>
                   <EmptyDescription>
-                    Add your expected client receipts and scheduled expenses to
-                    see them here.
+                    Add expected client payments and scheduled expenses to see
+                    them here.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -358,7 +411,7 @@ export function Dashboard() {
               <span>
                 {movements.length
                   ? `Showing ${Math.min(6, movements.length)} of ${movements.length} movements`
-                  : "Every movement starts with a plan"}
+                  : "No movements yet"}
               </span>
             </div>
           </CardFooter>

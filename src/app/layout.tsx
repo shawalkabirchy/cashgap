@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "@fontsource-variable/geist";
 import { WorkspaceProvider } from "@/components/workspace-provider";
@@ -6,9 +6,16 @@ import { AppShell } from "@/components/app-shell";
 
 export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },
-  title: "CashGap — A clearer picture of your cash",
+  title: "CashGap — Cash-flow planner for small agencies",
   description:
-    "A private cash-flow planner for small agencies. Explore payment timing, protect your reserve, and see the gaps before they arrive.",
+    "A private cash-flow planner for small agencies. Forecast daily balances, test late client payments, and keep your cash above its reserve.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f6f8f7",
 };
 
 export default function RootLayout({

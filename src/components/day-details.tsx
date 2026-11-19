@@ -44,7 +44,7 @@ export function DailyTable({
 }) {
   const money = (value: number) => formatMoney(value, currency);
   return (
-    <Card className="daily-section" id="daily-breakdown">
+    <Card className="daily-section table-card" id="daily-breakdown">
       <CardHeader>
         <CardTitle>
           <h2>Every day, explained</h2>
@@ -150,7 +150,7 @@ export function DayDetails({
           ))}
         </dl>
         <div>
-          <h3 className="font-medium">Contributing movements</h3>
+          <h3 className="font-semibold">Contributing movements</h3>
           {day.events.length ? (
             day.events.map((event) => (
               <div className="day-event" key={event.id}>
@@ -158,7 +158,9 @@ export function DayDetails({
                   {event.label}
                   {event.clientName ? <small>{event.clientName}</small> : null}
                 </p>
-                <span className="money">
+                <span
+                  className={`money font-medium ${event.kind === "invoice" ? "positive" : ""}`}
+                >
                   {event.kind === "invoice" ? "+" : "−"}
                   {money(event.amountMinor)}
                 </span>
@@ -172,7 +174,9 @@ export function DayDetails({
           )}
         </div>
         <Badge variant={day.belowReserve ? "destructive" : "secondary"}>
-          {day.belowReserve ? "Below reserve" : "At or above reserve"}
+          {day.belowReserve
+            ? "Closing balance below reserve"
+            : "Closing balance at or above reserve"}
         </Badge>
       </DialogContent>
     </Dialog>

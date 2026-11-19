@@ -196,7 +196,8 @@ test("monthly expense form keeps its anchor and exclusive end date", async ({
 
 test("CSV validates every row, preserves data, then imports locally", async ({
   page,
-}) => {
+}, testInfo) => {
+  const origin = `${new URL(testInfo.project.use.baseURL!).origin}/`;
   const requests: string[] = [];
   page.on("request", (request) =>
     requests.push(`${request.url()} ${request.postData() ?? ""}`),
@@ -239,7 +240,7 @@ test("CSV validates every row, preserves data, then imports locally", async ({
     ),
   ).toEqual([]);
   expect(
-    requests.filter((request) => !request.startsWith("http://localhost:4173/")),
+    requests.filter((request) => !request.startsWith(origin)),
   ).toEqual([]);
 });
 
@@ -478,7 +479,7 @@ test("blocked storage requires an explicit unsaved-session choice", async ({
   await expect(page.getByText("Could not open local storage")).toBeVisible();
   await page.getByRole("button", { name: "Explore an unsaved sample" }).click();
   await expect(
-    page.getByRole("heading", { name: "Your cash, a clearer picture." }),
+    page.getByRole("heading", { name: "Cash-flow forecast" }),
   ).toBeVisible();
   await expect(page.locator(".save-status")).toHaveText("Not saved");
 });

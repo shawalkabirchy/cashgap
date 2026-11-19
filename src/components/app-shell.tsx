@@ -94,11 +94,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="sidebar-bottom">
           <div className="privacy-heading">
             <LockKeyhole aria-hidden="true" />
-            <strong>Private by design</strong>
+            <strong>Stored on this device</strong>
           </div>
           <p>
-            Your numbers stay on this device. No accounts. No financial data
-            uploads.
+            No accounts and no uploads. Export a backup to move your plan to
+            another browser.
           </p>
           <Separator />
           <a
@@ -116,10 +116,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {stored?.isDemo ? (
           <div className="sample-banner screen-only">
             <p>
-              <strong>Sample agency.</strong> A little room to explore before
-              you make it yours.
+              <strong>Sample agency with fictional clients.</strong> Changes
+              are saved in this browser until you start your own plan.
             </p>
-            <Button size="sm" onClick={() => setPersonal(stored)}>
+            <Button
+              variant="outline"
+              onClick={() => setPersonal(stored)}
+            >
               Start my own plan
               <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
             </Button>

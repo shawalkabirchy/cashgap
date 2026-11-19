@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, ShieldCheck, TriangleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  Minus,
+  Plus,
+  ShieldCheck,
+  TriangleAlert,
+} from "lucide-react";
 import {
   CashGapError,
   formatDate,
@@ -113,14 +119,20 @@ export function ScenarioPanel({
     );
   const money = (value: number) =>
     formatMoney(value, base.workspace.settings.currency);
+  const step = (days: number) =>
+    setShift((current) => {
+      const value = /^-?\d+$/.test(current) ? Number(current) : 0;
+      return String(Math.min(365, Math.max(-365, value + days)));
+    });
   return (
     <Card className="scenario-panel">
       <CardHeader>
         <CardTitle>
-          <h2>What if a client pays late?</h2>
+          <h2>Late payment scenario</h2>
         </CardTitle>
         <CardDescription>
-          Preview a payment delay before you change your plan.
+          Move expected invoices by a number of days and see the forecast
+          before saving.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
@@ -176,7 +188,7 @@ export function ScenarioPanel({
                   type="button"
                   variant="link"
                   size="sm"
-                  className="self-start px-0"
+                  className="scenario-choose"
                   onClick={() => setSelecting(true)}
                 >
                   Choose invoices
@@ -184,11 +196,24 @@ export function ScenarioPanel({
                 </Button>
               ) : null}
             </FieldSet>
-            <Field>
+            <Field className="gap-2">
+              <FieldLabel
+                htmlFor="scenario-shift"
+                className="scenario-shift-label"
+              >
+                Shift payment by
+              </FieldLabel>
               <div className="scenario-shift">
-                <FieldLabel htmlFor="scenario-shift">
-                  Shift payment by
-                </FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Shift 7 days earlier"
+                  disabled={!!preview || saving}
+                  onClick={() => step(-7)}
+                >
+                  <Minus aria-hidden="true" />
+                </Button>
                 <Input
                   id="scenario-shift"
                   inputMode="numeric"
@@ -197,13 +222,20 @@ export function ScenarioPanel({
                   disabled={!!preview || saving}
                   aria-describedby="scenario-shift-hint"
                 />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Shift 7 days later"
+                  disabled={!!preview || saving}
+                  onClick={() => step(7)}
+                >
+                  <Plus aria-hidden="true" />
+                </Button>
                 <span className="text-sm text-muted-foreground">days</span>
               </div>
-              <p
-                id="scenario-shift-hint"
-                className="text-xs text-muted-foreground"
-              >
-                Positive delays; negative brings forward.
+              <p id="scenario-shift-hint" className="scenario-hint">
+                Positive days delay payment; negative days bring it forward.
               </p>
             </Field>
           </FieldGroup>
@@ -219,11 +251,11 @@ export function ScenarioPanel({
                 Unapplied preview · {preview.days > 0 ? "+" : ""}
                 {preview.days} days
               </Badge>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 <Button
                   type="button"
                   disabled={saving}
-                  className="flex-1"
+                  className="w-full"
                   onClick={async () => {
                     try {
                       const now = new Date().toISOString();
@@ -263,6 +295,7 @@ export function ScenarioPanel({
           ) : (
             <Button
               type="submit"
+              variant="outline"
               className="w-full"
               disabled={!selected.length || saving}
             >
@@ -283,7 +316,9 @@ export function ScenarioPanel({
             <ShieldCheck aria-hidden="true" />
           )}
           <AlertTitle>
-            {result.dangerDays ? "A gap worth planning for" : "Room to breathe"}
+            {result.firstBreachOn
+              ? `Falls below reserve on ${formatDate(result.firstBreachOn, true)}`
+              : "Stays above reserve"}
           </AlertTitle>
           <AlertDescription>
             {result.dangerDays ? (
@@ -291,12 +326,12 @@ export function ScenarioPanel({
                 {result.dangerDays} {result.dangerDays === 1 ? "day" : "days"}{" "}
                 below reserve. Add{" "}
                 <strong data-testid="top-up">{money(result.topUpMinor)}</strong>{" "}
-                at the forecast’s start to stay at or above reserve.
+                at the forecast start to stay at or above reserve.
               </>
             ) : (
               <>
                 Initial top-up: <strong data-testid="top-up">{money(0)}</strong>
-                . Your forecast stays at or above the{" "}
+                . Every closing balance stays at or above the{" "}
                 {money(base.workspace.settings.reserveMinor)} reserve.
               </>
             )}
