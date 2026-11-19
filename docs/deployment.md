@@ -2,7 +2,7 @@
 
 The application is a static Next.js export. It needs no server runtime, environment secrets, Functions, D1 database, or API bindings.
 
-**Production:** [cashgap.pages.dev](https://cashgap.pages.dev). **Source:** [shawalkabirchy/cashgap](https://github.com/shawalkabirchy/cashgap), branch `main`. The Pages project is `cashgap`, connected through the owner's GitHub integration. The first deployment and public verification completed October 26, 2026. The current release (commit `84b173b`, deployment `b2257e8c`) was built from a push and publicly verified November 20, 2026. See [release metadata](qa/cloudflare-release.json) and [public smoke results](qa/deployed-smoke-results.json).
+**Production:** [cashgap.pages.dev](https://cashgap.pages.dev). **Source:** [shawalkabirchy/cashgap](https://github.com/shawalkabirchy/cashgap), branch `main`. The Pages project is `cashgap`, connected through the owner's GitHub integration. The first deployment and public verification completed October 26, 2026. The current release (commit `edf47d6`, deployment `33d66c1f`) was built from a push and publicly verified November 20, 2026. See [release metadata](qa/cloudflare-release.json) and [public smoke results](qa/deployed-smoke-results.json).
 
 ## Prepare the release
 

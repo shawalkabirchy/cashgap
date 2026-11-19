@@ -6,14 +6,14 @@
  RUN  v5.0.5 D:/Console Log Studio/Projects/CashGap
 
 stdout | src/lib/domain.test.ts > CashGap forecast acceptance > processes the maximum supported records without losing integer precision
-Maximum dataset (500 invoices, 500 expenses, 50 monthly rules, 365 days): 6.94 ms
+Maximum dataset (500 invoices, 500 expenses, 50 monthly rules, 365 days): 7.00 ms
 
- ✓ src/lib/domain.test.ts (19 tests) 72ms
- ✓ src/lib/transfers.test.ts (7 tests) 102ms
+ ✓ src/lib/domain.test.ts (19 tests) 63ms
+ ✓ src/lib/transfers.test.ts (7 tests) 104ms
 
  Test Files  2 passed (2)
       Tests  26 passed (26)
-   Start at  01:51:28
-   Duration  1.79s (import 74%, tests 18%, transform 6%, worker 3%)
+   Start at  02:28:36
+   Duration  776ms (import 71%, tests 21%, transform 5%, worker 3%)
 
 JSON report written to D:/Console Log Studio/Projects/CashGap/docs/qa/unit-results.json

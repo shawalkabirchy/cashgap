@@ -4,13 +4,13 @@
   "repository": "https://github.com/shawalkabirchy/cashgap",
   "productionBranch": "main",
   "currentRelease": {
-    "applicationCommit": "84b173b3d50153ef2f4ea2e22463050b94ebcc87",
-    "deploymentId": "b2257e8c-12d5-4ad4-8248-63758ff56e1f",
-    "deploymentUrl": "https://b2257e8c.cashgap.pages.dev",
+    "applicationCommit": "edf47d64552c97c9398457e3faa55db58ec9ea7b",
+    "deploymentId": "33d66c1f-c744-494c-9660-4b6da09767d4",
+    "deploymentUrl": "https://33d66c1f.cashgap.pages.dev",
     "trigger": "Push to main via the Cloudflare Pages GitHub integration",
-    "checkRunCompletedAt": "2026-11-19T20:07:37Z",
+    "checkRunCompletedAt": "2026-11-19T20:30:45Z",
     "result": "success",
-    "publicVerificationAt": "2026-11-19T20:08:18.976Z",
+    "publicVerificationAt": "2026-11-19T20:31:20.094Z",
     "publicBrowser": "Chromium 156.0.8078.4"
   },
   "initialRelease": {
