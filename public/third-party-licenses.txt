@@ -4643,12 +4643,12 @@ SOFTWARE.
 
 
 ========================================================================
-@next/env@16.4.3
+@next/env@16.4.6
 SPDX/package declaration: MIT
 
 
 ========================================================================
-@next/eslint-plugin-next@16.4.3
+@next/eslint-plugin-next@16.4.6
 SPDX/package declaration: MIT
 
 
@@ -4683,7 +4683,7 @@ SOFTWARE.
 
 
 ========================================================================
-@next/swc-win32-x64-msvc@16.4.3
+@next/swc-win32-x64-msvc@16.4.6
 SPDX/package declaration: MIT
 
 
@@ -15099,7 +15099,7 @@ THE SOFTWARE.
 
 
 ========================================================================
-eslint-config-next@16.4.3
+eslint-config-next@16.4.6
 SPDX/package declaration: MIT
 
 
@@ -21596,7 +21596,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ========================================================================
-next@16.4.3
+next@16.4.6
 SPDX/package declaration: MIT
 
 

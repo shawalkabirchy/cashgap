@@ -46,7 +46,7 @@ for (const relative of Object.keys(lock.packages).sort()) {
       );
 }
 assert.ok(
-  seen.has("next@16.4.3") && seen.has("idb@8.0.4"),
+  seen.has("next@16.4.6") && seen.has("idb@8.0.4"),
   "Expected framework/storage notices are missing",
 );
 await mkdir(path.join(root, "public", "licenses"), { recursive: true });

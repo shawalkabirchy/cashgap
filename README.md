@@ -112,7 +112,7 @@ The abbreviated empty objects above illustrate the envelope, not a valid complet
 
 `src/lib/domain.ts` owns pure calculations, calendar rules, money, and validation. `storage.ts` owns transactions. `transfers.ts` owns file contracts. `sample.ts` owns synthetic fixtures. A single workspace provider connects these to the App Router's fixed Overview, Invoices, Expenses, and Settings routes. Charts load on demand; forms keep their drafts locally.
 
-Next.js 16.4.3 / React 19.3.1, TypeScript 6.0.3, Tailwind 4.3.3, official shadcn components, Recharts, idb, Zod, Papa Parse, and locally bundled Geist are pinned in the lockfile. Vitest covers the domain and imports; Playwright plus axe-core covers the exported app.
+Next.js 16.4.6 / React 19.3.1, TypeScript 6.0.3, Tailwind 4.3.3, official shadcn components, Recharts, idb, Zod, Papa Parse, and locally bundled Geist are pinned in the lockfile. Vitest covers the domain and imports; Playwright plus axe-core covers the exported app.
 
 Builds use Next.js's supported **Webpack** option because the default Turbopack CSS worker failed reproducibly on this Windows environment. TypeScript 6 and ESLint 9 match the current Next lint-plugin compatibility ranges. The development-only `compression` override applies its fixed 1.8.2 release to the preview server. Check these compatibility pins when upgrading.
 
