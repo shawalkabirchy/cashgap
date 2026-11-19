@@ -1,6 +1,6 @@
 # CashGap acceptance results
 
-Recorded October 26, 2026 (Asia/Dhaka). The static release is locally runnable and deployed at [cashgap.pages.dev](https://cashgap.pages.dev), with source in [GitHub](https://github.com/shawalkabirchy/cashgap).
+Local gate re-run November 20, 2026 (Asia/Dhaka) for the four-screen redesign and the Next.js 16.4.6 upgrade. The public deployment at [cashgap.pages.dev](https://cashgap.pages.dev) was verified October 26, 2026 and still serves that earlier release; see [public deployment verification](#public-deployment-verification). Source is in [GitHub](https://github.com/shawalkabirchy/cashgap).
 
 ## Recorded runs
 
@@ -10,11 +10,11 @@ Recorded October 26, 2026 (Asia/Dhaka). The static release is locally runnable a
 | `npm run typecheck` | Passed | [Type-check log](qa/typecheck.log) |
 | `npm test -- --reporter=default --reporter=json --outputFile=docs/qa/unit-results.json` | 26 passed in two files | [Console and performance log](qa/unit.log), [Vitest JSON](qa/unit-results.json) |
 | `npm run build` | Passed; four routes exported to `out` | [Production build log](qa/build.log) |
-| `npm run test:e2e` | 54 passed; 0 failed, skipped, or flaky; 115.01 seconds | [Playwright JSON](qa/e2e-results.json), [test source](../tests/app.spec.ts) |
-| `npm run capture:portfolio` | Passed; synthetic screenshots, print PDFs, and installed-browser keyboard checks | [Capture environment](portfolio/capture-environment.json), [capture script](../scripts/capture-portfolio.mjs) |
-| `node scripts/verify-deployment.mjs` | Passed on the public Cloudflare origin in isolated Chromium | [Public smoke results](qa/deployed-smoke-results.json), [script](../scripts/verify-deployment.mjs), [release metadata](qa/cloudflare-release.json) |
+| `CASHGAP_URL=http://localhost:4180 npm run test:e2e` | 54 passed; 0 failed, skipped, or flaky; 105.06 seconds | [Playwright JSON](qa/e2e-results.json), [test source](../tests/app.spec.ts) |
+| `CASHGAP_URL=http://localhost:4180/ npm run capture:portfolio` | Passed; synthetic screenshots, print PDFs, and installed-browser keyboard checks | [Capture environment](portfolio/capture-environment.json), [capture script](../scripts/capture-portfolio.mjs) |
+| `node scripts/verify-deployment.mjs` | Passed October 26, 2026 on the public Cloudflare origin in isolated Chromium, for the earlier release; not re-run | [Public smoke results](qa/deployed-smoke-results.json), [script](../scripts/verify-deployment.mjs), [release metadata](qa/cloudflare-release.json) |
 
-The browser suite ran against the production export served at `http://localhost:4173`, with two workers, isolated test workspaces, and no retries. It contains 18 cases per engine. The final rebuild uses the same application source as that tested export; subsequent edits were tests and documentation. Evidence copies under `docs/qa` survive replacement of the temporary `test-results` directory.
+The browser suite and capture ran against the production export served at `http://localhost:4180`, because another local project's server held port 4173 and Playwright would otherwise reuse it. The suite used two workers, isolated test workspaces, and no retries, with 18 cases per engine. Lint, type-check, unit tests, build, browser suite, and capture ran in that order against one build; no application source changed afterwards. Evidence copies under `docs/qa` survive replacement of the temporary `test-results` directory.
 
 ## Product acceptance
 
@@ -32,7 +32,7 @@ The browser suite ran against the production export served at `http://localhost:
 
 | Check ID | Method | Result | Evidence location |
 | --- | --- | --- | --- |
-| G-A1 — usable UI | Render at 1440 px and 360 px; assert navigation and page bounds. Run axe WCAG 2 A/AA checks on desktop, mobile, and invoice dialog. Check Escape, focus restoration, associated invalid fields, and reduced-motion capture. Navigate, preview/cancel, and save an invoice using Tab/Enter/type in installed Chrome and Edge. | Passed in the tested views. Data tables intentionally scroll within their region. No axe violations in those scans. | Responsive/focus/validation browser cases in [results](qa/e2e-results.json); [keyboard capture record](portfolio/capture-environment.json); [desktop](portfolio/desktop-annotated.png), [mobile](portfolio/mobile-annotated.png) |
+| G-A1 — usable UI | Render at 1440 px and 360 px; assert navigation and page bounds. Run axe WCAG 2 A/AA checks on desktop, mobile, and invoice dialog. Check Escape, focus restoration, associated invalid fields, and reduced-motion capture. Navigate, preview/cancel, and save an invoice using Tab/Enter/type in installed Chrome and Edge. | Passed in the tested views. On phones, movement, invoice, and expense tables fold secondary columns into the description line; the daily table scrolls within its own region without page overflow at 360 px. No axe violations in those scans. | Responsive/focus/validation browser cases in [results](qa/e2e-results.json); [keyboard capture record](portfolio/capture-environment.json); [desktop](portfolio/desktop-annotated.png), [mobile](portfolio/mobile-annotated.png) |
 | G-A2 — truthful state | Observe initial loading, explicit unsaved sample when storage is blocked, invalid input, failed save, successful transaction, and preview status. Abort an actual write transaction after request success. | Passed: aborted transaction never reports Saved; draft survives; invalid fields retain values. | Blocked/quota/aborted-transaction browser cases in [results](qa/e2e-results.json) |
 | G-A3 — reliable records | Reload committed data; race two same-origin tabs; abort transaction; inject quota failure; attempt invalid import/restore. Export committed data after a failed replacement. | Passed: no stale overwrite, partial write, or accidental export of a failed replacement as the old saved workspace. | Stale tab/scenario, quota, abort, failed replacement, and backup browser cases in [results](qa/e2e-results.json) |
 | G-A4 — privacy | Record request URLs and bodies before and after selecting/importing a sentinel CSV. Check for its filename, contents, and client text; reject non-local requests. Inspect file workflows and locally bundled fonts. | Passed: no sentinel or off-origin requests during that workflow. There are no application upload/analytics APIs. | Browser `CSV validates every row, preserves data, then imports locally`; [transfer source](../src/lib/transfers.ts); [capture console record](portfolio/capture-environment.json) |
@@ -47,28 +47,31 @@ Storage-full and blocked-storage conditions use deterministic `QuotaExceededErro
 | --- | --- |
 | OS / hardware | Windows 11, OS build 10.0.26200; Intel Core i7-1355U; 12 logical cores; 15.6 GiB usable memory |
 | Runtime | Node 24.14.0; npm 11.14.1 |
-| Toolchain | Next.js 16.4.3, React 19.3.1, TypeScript 6.0.3, Vitest 5.0.5, Playwright 1.64.1, axe-core 4.14.0 |
+| Toolchain | Next.js 16.4.6, React 19.3.1, TypeScript 6.0.3, Vitest 5.0.5, Playwright 1.64.1, axe-core 4.14.0 |
 | Full automated browser suite | Chromium 156.0.8078.4, Firefox 157.0, WebKit 27.2 |
-| Installed-browser keyboard smoke | Google Chrome 156.0.8078.47; Microsoft Edge 156.0.4314.42 |
+| Installed-browser keyboard smoke | Google Chrome 157.0.8103.79; Microsoft Edge 157.0.4341.60 |
 | Screenshot setup | Desktop 1440 × 1080; phone 390 × 844; minimum width 360; Asia/Dhaka; reduced motion |
 | Synthetic capture clock | October 25, 2026; the capture clock intentionally stays fixed while actual run timestamps use the host clock |
 
-The final logged pure-engine invocation processed **500 invoices, 500 one-time expenses, 50 monthly rules, and 365 days in 6.87 ms**. It retained safe integer precision and passed the **200 ms calculation target**. See [unit.log](qa/unit.log) and its test fixture for the exact measured operation. This is one Node/Vitest forecast invocation, not a percentile, storage benchmark, browser interaction-to-paint measurement, or performance guarantee on other devices.
+The final logged pure-engine invocation processed **500 invoices, 500 one-time expenses, 50 monthly rules, and 365 days in 6.94 ms**. It retained safe integer precision and passed the **200 ms calculation target**. See [unit.log](qa/unit.log) and its test fixture for the exact measured operation. This is one Node/Vitest forecast invocation, not a percentile, storage benchmark, browser interaction-to-paint measurement, or performance guarantee on other devices.
 
 The portfolio fixture starts with $12,500 and reserve $3,000. Its baseline minimum is $7,810 and closing balance $19,230. A +14-day shift to the $8,500 Juniper receipt produces a minimum of −$690 and an initial top-up of $3,690. Capture asserts these values before saving promotional assets. They are synthetic demonstrations, not customer results.
 
-Both print PDFs contain four pages and all 90 daily rows. A4 first page and Letter final page were rendered and visually inspected after the final currency-header layout change. Browser tests additionally check print cells at 703 px printable width using maximum supported BDT totals. [A4 preview](portfolio/report-a4-preview-1.png), [Letter final page](portfolio/report-letter-last-4.png), [PDF dimensions and row counts](qa/pdf-results.json).
+Both print PDFs contain four pages and all 90 daily rows. A4 first page and Letter final page were re-rendered from this run's PDFs and visually inspected. Browser tests additionally check print cells at 703 px printable width using maximum supported BDT totals. [A4 preview](portfolio/report-a4-preview-1.png), [Letter final page](portfolio/report-letter-last-4.png), [PDF dimensions and row counts](qa/pdf-results.json).
 
-The dependency audit during setup reported zero known vulnerabilities after applying the pinned preview-server compression fix. Application and dependency versions are recorded in `package-lock.json`; third-party license notices are retained in the export.
+`npm audit` on November 20, 2026 reports 12 moderate advisories and no low, high, or critical ones. Six arrive through the `shadcn` CLI (hono, @hono/node-server, and minimatch via ts-morph). It sits under `dependencies` only because `globals.css` imports `shadcn/tailwind.css`, so `npm audit --omit=dev` reports those six as well. The other six are eslint-config-next's typescript-eslint chain on the same minimatch advisory, used only for linting. A search of `out/` finds none of the affected package names outside the license notices. npm's only offered fix installs `shadcn@1.0.0`, a major downgrade from 4.22.1; it has not been applied. The October setup audit had reported zero known vulnerabilities after the pinned preview-server compression fix. Application and dependency versions are recorded in `package-lock.json`; third-party license notices are retained in the export.
 
 ## Public deployment verification
 
-The initial Cloudflare Git build for application commit `e8e94df55de3f213cc66ba44ea0ebf6f823985e9` succeeded on October 26, 2026. Public verification checked all four direct routes and provider headers, saved scenario application across reload, JSON download/restoration, CSV privacy, daily/print output, and phone layout. [Public results](qa/deployed-smoke-results.json) retain the actual responses and [screenshots](qa/deployed-desktop.png). The mobile check waits for the chart's resize observer to settle; an immediate resize assertion was premature. The full 54-case, three-engine suite above ran locally against the same application source; the public smoke run used Chromium.
+The initial Cloudflare Git build for application commit `e8e94df55de3f213cc66ba44ea0ebf6f823985e9` succeeded on October 26, 2026. Public verification checked all four direct routes and provider headers, saved scenario application across reload, JSON download/restoration, CSV privacy, daily/print output, and phone layout. [Public results](qa/deployed-smoke-results.json) retain the actual responses and [screenshots](qa/deployed-desktop.png). The mobile check waits for the chart's resize observer to settle; an immediate resize assertion was premature. The October 26 three-engine suite ran locally against that same application source; the public smoke run used Chromium.
+
+That release predates the redesign and Next.js 16.4.6. On November 20, 2026 the public origin still served the earlier interface: its sidebar reads "Private by design", where the redesign reads "Stored on this device". The redesign and upgrade commits are on local `main` and have not been pushed or deployed, so the public smoke run was not repeated.
 
 ## Not run and release limits
 
 | Environment or check | Result | Reason / next step |
 | --- | --- | --- |
+| Public deployment of the redesign and Next.js 16.4.6 | **Not run** | The commits are local only. Push them (or trigger a manual Git-backed build), then re-run `node scripts/verify-deployment.mjs` against the public origin. |
 | Automatic deployment after a Git push | **Not active** | A follow-up push did not trigger a build. CashGap is absent from the existing Cloudflare GitHub app's selected repositories. Manual Git-backed deployment succeeds; the owner must review and grant repository access to enable push builds. See [deployment setup](deployment.md). |
 | Custom-domain behavior | **Not run** | The deployed and verified origin is the free `cashgap.pages.dev` subdomain. No custom domain was requested. |
 | Actual Safari, iOS devices, Android devices, and screen-reader session | **Not run** | No physical-device or screen-reader session was available. Managed WebKit and axe are the recorded substitutes, not proof of those environments. |
@@ -76,4 +79,4 @@ The initial Cloudflare Git build for application commit `e8e94df55de3f213cc66ba4
 | Full interaction-to-paint latency at maximum records | **Not run** | The recorded performance figure measures only the pure forecast calculation. |
 | Browser eviction, hardware failure, and operating-system disk exhaustion | **Not run** | Failure injection verifies application responses; it does not simulate every environmental failure. Export JSON for retention. |
 
-The app is deployed and verified for portfolio review. Browser storage belongs to a device and origin, can be cleared, and has no cloud replica; JSON backup/restore is the recovery path. Existing localhost workspaces do not automatically move to the public origin.
+The October release is deployed and verified for portfolio review; the redesign and Next.js 16.4.6 are verified locally only. Browser storage belongs to a device and origin, can be cleared, and has no cloud replica; JSON backup/restore is the recovery path. Existing localhost workspaces do not automatically move to the public origin.

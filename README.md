@@ -39,7 +39,7 @@ npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
-Build before browser tests so they exercise the current production export. Playwright starts the preview server if port 4173 is free, or reuses that server locally. Each test has an isolated browser workspace. The suite exercises Chromium, Firefox, and WebKit; WebKit testing is not a claim that physical Safari or iOS was tested.
+Build before browser tests so they exercise the current production export. Playwright starts the preview server if port 4173 is free, or reuses whatever server is listening there locally. If another app holds 4173, set `CASHGAP_URL=http://localhost:4180` (any free port) for `npm run test:e2e` and `npm run capture:portfolio`. Each test has an isolated browser workspace. The suite exercises Chromium, Firefox, and WebKit; WebKit testing is not a claim that physical Safari or iOS was tested.
 
 See [acceptance evidence](docs/acceptance-results.md) for results, environment, limits, and commands actually run.
 
