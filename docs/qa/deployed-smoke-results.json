@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-26T14:17:47.353Z",
+  "checkedAt": "2026-11-19T20:08:18.976Z",
   "url": "https://cashgap.pages.dev",
   "browser": "156.0.8078.4",
   "method": "Isolated Playwright Chromium; Browser plugin not available",
@@ -73,8 +73,8 @@
   ],
   "backupFilename": "cashgap-backup.json",
   "backupBytes": 3893,
-  "pdfBytes": 96421,
-  "requestCount": 102,
+  "pdfBytes": 96657,
+  "requestCount": 104,
   "consoleErrors": [],
   "result": "Passed"
 }

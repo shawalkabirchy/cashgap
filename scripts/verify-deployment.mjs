@@ -42,6 +42,21 @@ async function snapshot() {
   }));
 }
 
+// Full-page shots paint fixed elements (sidebar, phone tab bar) at the original
+// viewport edge; grow the viewport to the document height first, then restore it.
+async function fullPageShot(path) {
+  const viewport = page.viewportSize();
+  let height = viewport.height;
+  for (let pass = 0; pass < 3; pass++) {
+    const next = await page.evaluate(() => document.documentElement.scrollHeight);
+    if (next <= height) break;
+    height = next;
+    await page.setViewportSize({ width: viewport.width, height });
+  }
+  await page.screenshot({ path });
+  await page.setViewportSize(viewport);
+}
+
 try {
   await page.clock.install({ time: new Date("2026-10-25T06:00:00.000Z") });
   const routes = [];
@@ -68,10 +83,10 @@ try {
   await expect(page.getByTestId("metric-lowest")).toHaveText("$7,810.00");
   await expect(page.locator(".forecast-chart svg.recharts-surface")).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: fileURLToPath(new URL("deployed-desktop.png", directory)), fullPage: true });
+  await fullPageShot(fileURLToPath(new URL("deployed-desktop.png", directory)));
   await page.setViewportSize({ width: 360, height: 800 });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: fileURLToPath(new URL("deployed-mobile.png", directory)), fullPage: true });
+  await fullPageShot(fileURLToPath(new URL("deployed-mobile.png", directory)));
   await page.setViewportSize({ width: 1440, height: 1080 });
   const before = await snapshot();
 

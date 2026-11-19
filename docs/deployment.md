@@ -2,7 +2,7 @@
 
 The application is a static Next.js export. It needs no server runtime, environment secrets, Functions, D1 database, or API bindings.
 
-**Production:** [cashgap.pages.dev](https://cashgap.pages.dev). **Source:** [shawalkabirchy/cashgap](https://github.com/shawalkabirchy/cashgap), branch `main`. The Pages project is `cashgap`, connected through the owner's GitHub integration. The first deployment and public verification completed October 26, 2026. See [release metadata](qa/cloudflare-release.json) and [public smoke results](qa/deployed-smoke-results.json).
+**Production:** [cashgap.pages.dev](https://cashgap.pages.dev). **Source:** [shawalkabirchy/cashgap](https://github.com/shawalkabirchy/cashgap), branch `main`. The Pages project is `cashgap`, connected through the owner's GitHub integration. The first deployment and public verification completed October 26, 2026. The current release (commit `84b173b`, deployment `b2257e8c`) was built from a push and publicly verified November 20, 2026. See [release metadata](qa/cloudflare-release.json) and [public smoke results](qa/deployed-smoke-results.json).
 
 ## Prepare the release
 
@@ -21,11 +21,11 @@ The deployable directory is **out**. Keep `public/_headers` in the source; Next 
 
 ## Production configuration
 
-The existing project has a GitHub source and builds successfully from `main`. The release was triggered through the authenticated Cloudflare Pages API, not by a push webhook. The build runs in Cloudflare's Linux build image version 3. No repository deployment secrets or local Wrangler login were needed.
+The existing project has a GitHub source and builds successfully from `main`. The initial release was triggered through the authenticated Cloudflare Pages API; later releases build from pushes to `main`. The build runs in Cloudflare's Linux build image version 3. No repository deployment secrets or local Wrangler login were needed.
 
-**Automatic push builds need an owner setup step.** The existing Cloudflare Workers and Pages GitHub app is restricted to selected repositories, and CashGap is not selected. A follow-up push did not create a deployment. Its settings advertise write access to repository administration, code, checks, deployments, and pull requests; that access was not expanded during deployment. To enable automatic production and preview builds, review [the existing installation](https://github.com/settings/installations/167602600), add only `shawalkabirchy/cashgap` while retaining the existing selections, and save. Then verify a new push creates a deployment. The Pages-side production and preview controls are already enabled.
+**Automatic push builds are active.** Pushing `84b173b` to `main` on November 20, 2026 created a Cloudflare Pages check run on the commit and production deployment `b2257e8c` with no manual trigger, so [the Cloudflare GitHub app installation](https://github.com/settings/installations/167602600) now covers this repository. Preview builds for other branches are enabled in Pages settings but have not been exercised.
 
-Until that access is granted, a manual Git-backed deployment works: send an authenticated `POST /accounts/{account_id}/pages/projects/cashgap/deployments` request with `multipart/form-data` containing `branch=main`. Cloudflare fetches and builds that branch. This is the method used for this release; creating a deployment for a new commit is separate from pushing it to GitHub.
+If push builds stop, for example because the repository is dropped from the app's selected repositories, a manual Git-backed deployment still works: send an authenticated `POST /accounts/{account_id}/pages/projects/cashgap/deployments` request with `multipart/form-data` containing `branch=main`. Cloudflare fetches and builds that branch. The initial release used this method.
 
 The configured build settings are:
 
@@ -48,7 +48,7 @@ References: [Cloudflare static Next.js guide](https://developers.cloudflare.com/
 
 Open `/`, `/invoices/`, `/expenses/`, and `/settings/` directly and refresh them. Confirm the sample initializes once; save an invoice and reload; preview/cancel/apply the 14-day scenario; download and restore a synthetic backup; inspect print layout; and check requests/console for missing assets or financial-data transmission. Confirm the configured response headers on that origin and recheck current free-plan terms before distribution.
 
-The public Chromium smoke check passed direct navigation to all four routes, provider response headers, scenario preview/cancel/apply and reload, JSON download/restoration, local CSV import, print/PDF rendering, and 1440 px / 360 px layouts. It recorded no console/HTTP errors, off-origin requests, or imported sentinel data in requests. See [results](qa/deployed-smoke-results.json) and the [desktop](qa/deployed-desktop.png) / [phone](qa/deployed-mobile.png) screenshots. Actual Safari/device checks and custom-domain behavior remain **Not run**.
+The public Chromium smoke check (latest run November 20, 2026) passed direct navigation to all four routes, provider response headers, scenario preview/cancel/apply and reload, JSON download/restoration, local CSV import, print/PDF rendering, and 1440 px / 360 px layouts. It recorded no console/HTTP errors, off-origin requests, or imported sentinel data in requests. See [results](qa/deployed-smoke-results.json) and the [desktop](qa/deployed-desktop.png) / [phone](qa/deployed-mobile.png) screenshots. Actual Safari/device checks and custom-domain behavior remain **Not run**.
 
 With Playwright Chromium installed, rerun the public check with:
 

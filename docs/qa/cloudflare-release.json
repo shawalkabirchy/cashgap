@@ -3,17 +3,30 @@
   "productionUrl": "https://cashgap.pages.dev",
   "repository": "https://github.com/shawalkabirchy/cashgap",
   "productionBranch": "main",
-  "applicationCommit": "e8e94df55de3f213cc66ba44ea0ebf6f823985e9",
-  "initialDeploymentId": "81a061a8-4549-4ce9-ad0b-0cdb8b89682f",
-  "initialDeploymentUrl": "https://81a061a8.cashgap.pages.dev",
-  "initialDeploymentCompletedAt": "2026-10-26T14:12:33.99845Z",
-  "publicVerificationAt": "2026-10-26T14:17:47.353Z",
-  "initialDeploymentResult": "success",
+  "currentRelease": {
+    "applicationCommit": "84b173b3d50153ef2f4ea2e22463050b94ebcc87",
+    "deploymentId": "b2257e8c-12d5-4ad4-8248-63758ff56e1f",
+    "deploymentUrl": "https://b2257e8c.cashgap.pages.dev",
+    "trigger": "Push to main via the Cloudflare Pages GitHub integration",
+    "checkRunCompletedAt": "2026-11-19T20:07:37Z",
+    "result": "success",
+    "publicVerificationAt": "2026-11-19T20:08:18.976Z",
+    "publicBrowser": "Chromium 156.0.8078.4"
+  },
+  "initialRelease": {
+    "applicationCommit": "e8e94df55de3f213cc66ba44ea0ebf6f823985e9",
+    "deploymentId": "81a061a8-4549-4ce9-ad0b-0cdb8b89682f",
+    "deploymentUrl": "https://81a061a8.cashgap.pages.dev",
+    "trigger": "Manual Git-backed build via Cloudflare Pages API",
+    "completedAt": "2026-10-26T14:12:33.99845Z",
+    "result": "success",
+    "publicVerificationAt": "2026-10-26T14:17:47.353Z",
+    "publicBrowser": "Chromium 156.0.8078.4"
+  },
   "source": "github",
   "automaticProductionDeploymentsConfigured": true,
-  "automaticPushDeploymentsVerified": false,
-  "githubAppRepositoryAccess": "CashGap is not in the existing installation's selected repositories; access was not expanded",
-  "releaseTrigger": "Manual Git-backed build via Cloudflare Pages API",
+  "automaticPushDeploymentsVerified": true,
+  "githubAppRepositoryAccess": "Working: the push of 84b173b created a Cloudflare Pages check run and production deployment without a manual trigger",
   "previewDeploymentSetting": "all",
   "buildCommand": "npm run build",
   "outputDirectory": "out",
@@ -22,7 +35,6 @@
   "npmVersion": "11.14.1",
   "webAnalyticsEnabled": false,
   "functions": false,
-  "publicBrowser": "Chromium 156.0.8078.4",
   "smokeEvidence": "deployed-smoke-results.json",
-  "note": "Application commit verified before this documentation and evidence follow-up; all financial test data was synthetic and isolated."
+  "note": "Build settings and Node/npm versions are as configured for the initial release; all financial test data was synthetic and isolated."
 }
