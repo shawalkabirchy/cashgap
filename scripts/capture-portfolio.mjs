@@ -4,6 +4,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
 
+// Override when port 4173 is taken: CASHGAP_URL=http://localhost:4180/ npm run capture:portfolio
+const baseURL = process.env.CASHGAP_URL ?? "http://localhost:4173/";
 const directory = new URL("../docs/portfolio/", import.meta.url);
 const output = (name) => fileURLToPath(new URL(name, directory));
 async function keyboardTo(page, target) {
@@ -17,6 +19,22 @@ async function keyboardTo(page, target) {
 async function keyboardActivate(page, target) {
   await keyboardTo(page, target);
   await page.keyboard.press("Enter");
+}
+
+// A fullPage screenshot paints fixed elements (desktop sidebar, phone tab bar)
+// at the original viewport edge, mid-page. Growing the viewport to the document
+// height first puts them where a reader sees them, then the viewport is restored.
+async function fullPageShot(page, path) {
+  const viewport = page.viewportSize();
+  let height = viewport.height;
+  for (let pass = 0; pass < 3; pass++) {
+    const next = await page.evaluate(() => document.documentElement.scrollHeight);
+    if (next <= height) break;
+    height = next;
+    await page.setViewportSize({ width: viewport.width, height });
+  }
+  await page.screenshot({ path });
+  await page.setViewportSize(viewport);
 }
 
 await mkdir(directory, { recursive: true });
@@ -35,13 +53,13 @@ page.on("console", (message) => {
 
 try {
   await page.clock.install({ time: new Date("2026-10-25T06:00:00.000Z") });
-  await page.goto("http://localhost:4173/");
+  await page.goto(baseURL);
   await expect(page.getByTestId("metric-opening")).toHaveText("$12,500.00");
   await expect(
     page.locator(".forecast-chart svg.recharts-surface"),
   ).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: output("desktop.png"), fullPage: true });
+  await fullPageShot(page, output("desktop.png"));
   const targets = [
     ".metrics",
     ".dashboard-grid > [data-slot=card]",
@@ -57,7 +75,7 @@ try {
   await page.getByRole("button", { name: "Preview scenario" }).click();
   await expect(page.getByTestId("metric-lowest")).toHaveText("-$690.00");
   await expect(page.getByTestId("top-up")).toHaveText("$3,690.00");
-  await page.screenshot({ path: output("scenario.png"), fullPage: true });
+  await fullPageShot(page, output("scenario.png"));
   await page.getByRole("button", { name: "Cancel preview" }).click();
   await page.getByRole("button", { name: "View daily breakdown" }).click();
   await page
@@ -89,7 +107,7 @@ try {
     ),
     "Mobile layout overflows",
   );
-  await page.screenshot({ path: output("mobile.png"), fullPage: true });
+  await fullPageShot(page, output("mobile.png"));
   await page.setViewportSize({ width: 360, height: 800 });
   assert.ok(
     await page.evaluate(
@@ -125,7 +143,7 @@ try {
   );
 
   const mobile = await readFile(new URL("mobile.png", directory));
-  const mobileDocument = `<!doctype html><html lang="en"><meta charset="utf-8"><title>CashGap mobile walkthrough</title><style>body{margin:0;padding:28px;background:#e9f0ec;color:#132c26;font:16px/1.6 system-ui,sans-serif}h1{margin:0 0 8px;font-size:26px}.layout{display:flex;align-items:flex-start;gap:28px}img{width:390px;border:1px solid #d3dfd8;border-radius:14px}aside{position:sticky;top:28px;max-width:300px}li{margin-bottom:26px}p{color:#52685c}</style><h1>CashGap on a phone</h1><p>Actual responsive UI · Synthetic sample · 390px viewport</p><div class="layout"><img alt="CashGap mobile dashboard" src="data:image/png;base64,${mobile.toString("base64")}"><aside><ol><li>Compact navigation keeps the four workflows reachable.</li><li>The sample banner identifies fictional data and offers a personal plan.</li><li>Financial metrics reflow into two columns.</li><li>The forecast and scenario stack vertically; every control remains usable.</li><li>Wide data tables scroll within their own region. The page itself does not overflow.</li></ol></aside></div></html>`;
+  const mobileDocument = `<!doctype html><html lang="en"><meta charset="utf-8"><title>CashGap mobile walkthrough</title><style>body{margin:0;padding:28px;background:#e9f0ec;color:#132c26;font:16px/1.6 system-ui,sans-serif}h1{margin:0 0 8px;font-size:26px}.layout{display:flex;align-items:flex-start;gap:28px}img{width:390px;border:1px solid #d3dfd8;border-radius:14px}aside{position:sticky;top:28px;max-width:300px}li{margin-bottom:26px}p{color:#52685c}</style><h1>CashGap on a phone</h1><p>Actual responsive UI · Synthetic sample · 390px viewport</p><div class="layout"><img alt="CashGap mobile dashboard" src="data:image/png;base64,${mobile.toString("base64")}"><aside><ol><li>Compact navigation keeps the four workflows reachable.</li><li>The sample banner identifies fictional data and offers a personal plan.</li><li>Financial metrics reflow into two columns.</li><li>The forecast and scenario stack vertically; every control remains usable.</li><li>Tables collapse to date, description and amount, with the type under each description. The page itself does not overflow.</li></ol></aside></div></html>`;
   await board.setViewportSize({ width: 820, height: 1080 });
   await board.setContent(mobileDocument, { waitUntil: "load" });
   await board.locator("img").evaluate((image) => image.decode());
@@ -152,7 +170,7 @@ try {
       const isolated = await system.newContext({ timezoneId: "Asia/Dhaka" });
       const check = await isolated.newPage();
       await check.clock.install({ time: new Date("2026-10-25T06:00:00.000Z") });
-      await check.goto("http://localhost:4173/");
+      await check.goto(baseURL);
       await expect(check.getByTestId("metric-lowest")).toHaveText("$7,810.00");
       await keyboardActivate(check, check.getByRole("button", { name: "Preview scenario" }));
       await expect(check.getByTestId("metric-lowest")).toHaveText("-$690.00");
@@ -168,7 +186,7 @@ try {
       await keyboardActivate(check, form.getByRole("button", { name: "Add invoice", exact: true }));
       await expect(form).not.toBeVisible();
       await expect(
-        check.getByText("System browser smoke fixture", { exact: true }),
+        check.getByRole("cell", { name: "System browser smoke fixture", exact: true }),
       ).toBeVisible();
       systemBrowsers.push({
         channel,

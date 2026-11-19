@@ -1,17 +1,17 @@
 {
-  "capturedAt": "2026-10-25T20:14:09.295Z",
+  "capturedAt": "2026-11-19T19:29:14.883Z",
   "fixtureDate": "2026-10-25",
   "timezone": "Asia/Dhaka",
   "browser": "156.0.8078.4",
   "systemBrowsers": [
     {
       "channel": "chrome",
-      "version": "156.0.8078.47",
+      "version": "157.0.8103.79",
       "result": "Passed with keyboard only: preview, cancel, static navigation and invoice save"
     },
     {
       "channel": "msedge",
-      "version": "156.0.4314.42",
+      "version": "157.0.4341.60",
       "result": "Passed with keyboard only: preview, cancel, static navigation and invoice save"
     }
   ],
