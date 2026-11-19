@@ -114,7 +114,7 @@ The abbreviated empty objects above illustrate the envelope, not a valid complet
 
 Next.js 16.4.6 / React 19.3.1, TypeScript 6.0.3, Tailwind 4.3.3, official shadcn components, Recharts, idb, Zod, Papa Parse, and locally bundled Geist are pinned in the lockfile. Vitest covers the domain and imports; Playwright plus axe-core covers the exported app.
 
-Builds use Next.js's supported **Webpack** option because the default Turbopack CSS worker failed reproducibly on this Windows environment. TypeScript 6 and ESLint 9 match the current Next lint-plugin compatibility ranges. The development-only `compression` override applies its fixed 1.8.2 release to the preview server. Check these compatibility pins when upgrading.
+Builds use Next.js's supported **Webpack** option because the default Turbopack CSS worker failed reproducibly on this Windows environment. TypeScript 6 and ESLint 9 match the current Next lint-plugin compatibility ranges. The development-only `compression` override applies its fixed 1.8.2 release to the preview server, and a `minimatch` override scoped to `@ts-morph/common` keeps the shadcn CLI off a vulnerable minimatch 10 until shadcn moves past ts-morph 26. Check these compatibility pins when upgrading.
 
 Navigation deliberately uses static document links: the Windows export generated segmented-prefetch paths that did not match the Next client requests. Each route reloads the committed IndexedDB snapshot. Restore Next Link navigation when that export behavior is corrected and verified on all target engines.
 
