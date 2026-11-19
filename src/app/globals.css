@@ -636,6 +636,9 @@ a:focus-visible,
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+  /* A grid item in CardHeader: without this its column stretches to the
+     horizon control's natural width and the card clips the control. */
+  min-width: 0;
 }
 .chart-subtitle {
   color: var(--muted-foreground);
@@ -1226,6 +1229,7 @@ a:focus-visible,
   }
   .chart-header .segmented [data-slot="toggle-group-item"] {
     flex: 1 1 0;
+    padding-inline: 4px;
   }
   .chart-frame {
     min-height: 260px;

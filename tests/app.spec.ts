@@ -562,6 +562,45 @@ test("responsive layout and accessible dashboard and form", async ({
   ).toBe(true);
 });
 
+test("segmented controls fit inside their cards at 360 px", async ({
+  page,
+}) => {
+  // Cards clip overflow, so a page-level scrollWidth check cannot see this.
+  await page.setViewportSize({ width: 360, height: 800 });
+  for (const path of ["/", "/invoices/"]) {
+    await openApp(page, path);
+    const controls = page.locator(".segmented");
+    await expect(controls.first()).toBeVisible();
+    const problems = await controls.evaluateAll((elements) =>
+      elements.flatMap((control) => {
+        const name = control.getAttribute("aria-label");
+        const card = control.closest<HTMLElement>('[data-slot="card"]');
+        if (!card) return [`${name}: not inside a card`];
+        const inset =
+          parseFloat(getComputedStyle(card).getPropertyValue("--card-spacing")) ||
+          0;
+        const outer = card.getBoundingClientRect();
+        const box = control.getBoundingClientRect();
+        const found: string[] = [];
+        if (
+          box.left < outer.left + inset - 0.5 ||
+          box.right > outer.right - inset + 0.5
+        )
+          found.push(
+            `${name}: spans ${Math.round(box.left)}–${Math.round(box.right)} px, card content is ${Math.round(outer.left + inset)}–${Math.round(outer.right - inset)} px`,
+          );
+        for (const item of control.querySelectorAll<HTMLElement>(
+          '[data-slot="toggle-group-item"]',
+        ))
+          if (item.scrollWidth > item.clientWidth)
+            found.push(`${name}: "${item.textContent}" label is clipped`);
+        return found;
+      }),
+    );
+    expect(problems, path).toEqual([]);
+  }
+});
+
 test("horizon selection persists and summaries agree with the engine", async ({
   page,
 }) => {
